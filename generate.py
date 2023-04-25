@@ -17,16 +17,16 @@ def generate(tokenizer, prompt, model, config):
 
     
 def setup_model(config):
-    model = AutoModelForCausalLM.from_pretrained(config["model_name"], device_map="auto", torch_dtype=torch.float16)
-    tokenizer = AutoTokenizer.from_pretrained(config["tokenizer_name"])
+    model = AutoModelForCausalLM.from_pretrained("nomic-ai/gpt4all-j", revision="v1.2-jazzy", device_map="auto", torch_dtype=torch.float16)
+    tokenizer = AutoTokenizer.from_pretrained("nomic-ai/gpt4all-j")
     added_tokens = tokenizer.add_special_tokens({"bos_token": "<s>", "eos_token": "</s>", "pad_token": "<pad>"})
 
     if added_tokens > 0:
         model.resize_token_embeddings(len(tokenizer))
 
-    if config["lora"]:
-        model = PeftModelForCausalLM.from_pretrained(model, config["lora_path"], device_map="auto", torch_dtype=torch.float16)
-        model.to(dtype=torch.float16)
+    # if config["lora"]:
+    #     model = PeftModelForCausalLM.from_pretrained(model, config["lora_path"], device_map="auto", torch_dtype=torch.float16)
+    #     model.to(dtype=torch.float16)
 
     print(f"Mem needed: {model.get_memory_footprint() / 1024 / 1024 / 1024:.2f} GB")
         
